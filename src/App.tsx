@@ -11,18 +11,19 @@ function App() {
   const [organization, setOrganization] = useState("");
   const [date, setDate] = useState("");
 
-  // debounce typing so we don't re-filter on every keypress
+  // debounce search input
   const debounced = useDebouncedValue(query, 300);
 
-  // simple validation for rubric (clear message for short queries)
+  // validation for friendly messages
   const shortQueryError =
     debounced.trim().length > 0 && debounced.trim().length < 2;
 
-  // filtering (title + your four filters)
+  // filtering (title + description) + existing filters
   const filteredEvents = events.filter((event: Event) => {
+    const haystack = (event.title + " " + event.description).toLowerCase();
+
     const matchesQuery =
-      debounced.trim() === "" ||
-      event.title.toLowerCase().includes(debounced.toLowerCase());
+      debounced.trim() === "" || haystack.includes(debounced.toLowerCase());
 
     const matchesCategory = category === "" || event.category === category;
 
@@ -34,7 +35,7 @@ function App() {
       organization === "" ||
       event.organization.toLowerCase().includes(organization.toLowerCase());
 
-    // exact date match (keep as-is; change to >= for "on/after" behavior)
+    // exact-date match (keep per template; switch to >= for "on/after" if you want)
     const matchesDate = date === "" || event.date === date;
 
     return (
@@ -47,9 +48,7 @@ function App() {
   });
 
   const showEmpty =
-    !shortQueryError &&
-    debounced.trim() !== "" &&
-    filteredEvents.length === 0;
+    !shortQueryError && debounced.trim() !== "" && filteredEvents.length === 0;
 
   return (
     <main style={{ padding: "24px" }}>
@@ -66,12 +65,12 @@ function App() {
         }}
       >
         <label htmlFor="search" className="sr-only">
-          Search by title
+          Search by title or description
         </label>
         <input
           id="search"
           type="search"
-          placeholder="Search by title"
+          placeholder="Search by title or description…"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           aria-describedby="search-help"
@@ -114,7 +113,7 @@ function App() {
         Type at least 2 characters. Results update automatically.
       </div>
 
-      {/* Friendly messages (Error Handling rubric) */}
+      {/* Friendly messages */}
       <div aria-live="polite" aria-atomic="true" style={{ minHeight: "1.5rem" }}>
         {shortQueryError && (
           <p role="alert">Type at least 2 characters to search.</p>
@@ -141,6 +140,8 @@ function App() {
           <li key={ev.id} style={{ marginBottom: "10px" }}>
             <strong>{ev.title}</strong> ({ev.category}) <br />
             {ev.date} – {ev.location} – {ev.organization}
+            <br />
+            <span>{ev.description}</span>
           </li>
         ))}
       </ul>
