@@ -1,41 +1,54 @@
-import { useState } from "react";
-import "./App.css";
-import { type Event, events } from "./types/events";
-import { useDebouncedValue } from "./hooks/useDebouncedValue";
+import { useState } from "react"
+import "./App.css"
+import { type Event, events } from "./types/events"
+import { useDebouncedValue } from "./hooks/useDebouncedValue"
+import FilterPanel from "./components/FilterPanel"
+import SearchMessages from "./components/SearchMessages"
+import EventList from "./components/EventList"
 
 function App() {
-  // controls
-  const [query, setQuery] = useState("");
-  const [category, setCategory] = useState("");
-  const [location, setLocation] = useState("");
-  const [organization, setOrganization] = useState("");
-  const [date, setDate] = useState("");
+  const [filters, setFilters] = useState({
+    query: "",
+    category: "",
+    location: "",
+    organization: "",
+    date: "",
+  })
 
-  // debounce typing so we don't re-filter on every keypress
-  const debounced = useDebouncedValue(query, 300);
+  const handleChange = (field: string, value: string) => {
+    setFilters((prev) => ({ ...prev, [field]: value }))
+  }
 
-  // simple validation for rubric (clear message for short queries)
+  // debounce search input to improve performance
+  const debounced = useDebouncedValue(filters.query, 300)
+
+  // validation for friendly messages
   const shortQueryError =
-    debounced.trim().length > 0 && debounced.trim().length < 2;
+    debounced.trim().length > 0 && debounced.trim().length < 2
 
-  // filtering (title + your four filters)
+  // filtering logic (title + description + other filters)
   const filteredEvents = events.filter((event: Event) => {
-    const matchesQuery =
-      debounced.trim() === "" ||
-      event.title.toLowerCase().includes(debounced.toLowerCase());
 
-    const matchesCategory = category === "" || event.category === category;
+    // We're getting the title & description, and making a haystack to search within.
+    const title = event.title.toLowerCase() ?? ""
+    const description = event.description.toLowerCase() ?? ""
+    const haystack = `${title} ${description}` // a string value combined with title & description
+    const query = debounced.trim().toLowerCase() // here is the current search query thts also trimmed & lowercased
 
+
+    // Now here are all the filtering variables we will check against the current query
+    const matchesQuery = query === "" || haystack.includes(query)
+    const matchesCategory =
+      filters.category === "" || event.category === filters.category
     const matchesLocation =
-      location === "" ||
-      event.location.toLowerCase().includes(location.toLowerCase());
-
+      filters.location === "" ||
+      event.location?.toLowerCase().includes(filters.location.toLowerCase())
     const matchesOrganization =
-      organization === "" ||
-      event.organization.toLowerCase().includes(organization.toLowerCase());
-
-    // exact date match (keep as-is; change to >= for "on/after" behavior)
-    const matchesDate = date === "" || event.date === date;
+      filters.organization === "" ||
+      event.organization
+        ?.toLowerCase()
+        .includes(filters.organization.toLowerCase())
+    const matchesDate = filters.date === "" || event.date === filters.date
 
     return (
       matchesQuery &&
@@ -43,109 +56,27 @@ function App() {
       matchesLocation &&
       matchesOrganization &&
       matchesDate
-    );
-  });
-
-  const showEmpty =
-    !shortQueryError &&
-    debounced.trim() !== "" &&
-    filteredEvents.length === 0;
+    )
+  })
 
   return (
     <main style={{ padding: "24px" }}>
       <h1>Browse &amp; Filter Events</h1>
 
-      {/* Search + Filters */}
-      <div
-        className="search-row"
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1.4fr .9fr .9fr .9fr .8fr",
-          gap: ".5rem",
-          margin: "1rem 0",
-        }}
-      >
-        <label htmlFor="search" className="sr-only">
-          Search by title
-        </label>
-        <input
-          id="search"
-          type="search"
-          placeholder="Search by title"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          aria-describedby="search-help"
-        />
+      {/* Filters and search bar */}
+      <FilterPanel {...filters} onChange={handleChange} />
 
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          aria-label="Filter by category"
-        >
-          <option value="">All Categories</option>
-          <option value="academic">Academic</option>
-          <option value="social">Social</option>
-          <option value="sports">Sports</option>
-        </select>
+      {/* Search and validation messages */}
+      <SearchMessages
+        query={debounced}
+        shortQueryError={shortQueryError}
+        filteredCount={filteredEvents.length}
+      />
 
-        <input
-          placeholder="Filter by location"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-          aria-label="Filter by location"
-        />
-
-        <input
-          placeholder="Filter by organization"
-          value={organization}
-          onChange={(e) => setOrganization(e.target.value)}
-          aria-label="Filter by organization"
-        />
-
-        <input
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          aria-label="Filter by date (exact match)"
-        />
-      </div>
-
-      <div id="search-help" className="visually-hidden">
-        Type at least 2 characters. Results update automatically.
-      </div>
-
-      {/* Friendly messages (Error Handling rubric) */}
-      <div aria-live="polite" aria-atomic="true" style={{ minHeight: "1.5rem" }}>
-        {shortQueryError && (
-          <p role="alert">Type at least 2 characters to search.</p>
-        )}
-
-        {!shortQueryError && debounced.trim() !== "" && showEmpty && (
-          <p>No events match “{debounced}”. Try different keywords.</p>
-        )}
-
-        {!shortQueryError &&
-          debounced.trim() !== "" &&
-          !showEmpty &&
-          filteredEvents.length > 0 && (
-            <p>
-              {filteredEvents.length} result
-              {filteredEvents.length !== 1 ? "s" : ""} found
-            </p>
-          )}
-      </div>
-
-      {/* Results */}
-      <ul>
-        {filteredEvents.map((ev) => (
-          <li key={ev.id} style={{ marginBottom: "10px" }}>
-            <strong>{ev.title}</strong> ({ev.category}) <br />
-            {ev.date} – {ev.location} – {ev.organization}
-          </li>
-        ))}
-      </ul>
+      {/* Event list results */}
+      <EventList events={filteredEvents} />
     </main>
-  );
+  )
 }
 
-export default App;
+export default App
