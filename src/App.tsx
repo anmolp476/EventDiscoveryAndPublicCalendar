@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import "./App.css"
 import { type Event, events } from "./types/events"
 import { useDebouncedValue } from "./hooks/useDebouncedValue"
@@ -7,12 +7,39 @@ import SearchMessages from "./components/SearchMessages"
 import EventList from "./components/EventList"
 
 function App() {
+
+  const [firebaseBookings, setFirebaseBookings] = useState<any[]>([])
+
+  useEffect(() => {
+    async function fetchRoomLocations() {
+      try {
+          const response = await fetch("https://cps714-b56c0-default-rtdb.firebaseio.com/roomBookings.json")
+        
+          const data = await response.json()
+          if(!data) return;
+
+          const values = Object.values(data);
+          const locations = values.map((event: any) => ({
+            roomSelected: event.roomSelected,
+            startDate: event.startDate.substring(0, 10), // Extract YYYY-MM-DD
+            cateringSelected: event.cateringSelected,
+          }));
+
+          setFirebaseBookings(locations);
+      } catch (error) {
+        console.error("Error fetching room locations:", error)
+      }
+    }
+    fetchRoomLocations();
+  }, []);
+
   const [filters, setFilters] = useState({
     query: "",
     category: "",
     location: "",
     organization: "",
     date: "",
+    catering: "",
   })
 
   const handleChange = (field: string, value: string) => {
@@ -26,8 +53,19 @@ function App() {
   const shortQueryError =
     debounced.trim().length > 0 && debounced.trim().length < 2
 
+  const mergedEvents = events.map((event, index) => {
+    const firebaseBooking = firebaseBookings[index];
+
+    return {
+      ...event,
+      location: firebaseBooking?.roomSelected ?? event.location,
+      cateringSelected: firebaseBooking?.cateringSelected ?? false,
+      date: firebaseBooking?.startDate ?? event.date,
+    };
+  });
+
   // filtering logic (title + description + other filters)
-  const filteredEvents = events.filter((event: Event) => {
+  const filteredEvents = mergedEvents.filter((event: Event) => {
 
     // We're getting the title & description, and making a haystack to search within.
     const title = event.title.toLowerCase() ?? ""
