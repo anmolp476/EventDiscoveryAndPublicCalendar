@@ -6,6 +6,7 @@ export type Event = {
   category: "academic" | "social" | "sports";
   location: string;
   organization: string;
+  cateringSelected?: boolean;
 };
 
 export const events: Event[] = [
