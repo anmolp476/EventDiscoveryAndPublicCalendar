@@ -19,7 +19,7 @@ export default function EventList({ events }: EventListProps) {
                     <span>{ev.description}</span>
                     <br />
                     <span>Catering Selected: </span>
-                    <span>{ev.cateringSelected ? "true" : "false"}</span>
+                    <span>{ev.cateringSelected ? "True" : "False"}</span>
                 </li> 
             ))}
         </ul>
