@@ -2,3 +2,24 @@
 input,select{padding:.6rem .7rem;border:1px solid #d0d7de;border-radius:8px}
 input:focus,select:focus{outline:2px solid #4c8bf5;outline-offset:1px}
 ul{padding-left:1rem}
+#mainContainer{
+    width: 100vw; 
+    display: flex; 
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 0 90px 0;
+}
+#eventView{
+
+    width: 60vw;
+}
+#calenderView{
+    width: 80vw; 
+}
+
+.fc .fc-toolbar.fc-header-toolbar{
+    display: flex; 
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}

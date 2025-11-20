@@ -19,10 +19,12 @@ export default function FilterPanel({
     <div
         className="search-row"
         style={{
-          display: "grid",
-          gridTemplateColumns: "1.4fr .9fr .9fr .9fr .8fr",
+          display: "flex",
+          justifyContent: "center",
+          flexWrap: 'wrap',
           gap: ".5rem",
           margin: "1rem 0",
+
         }}
     >
         <input
@@ -55,8 +57,6 @@ export default function FilterPanel({
             onChange={(e) => onChange("organization", e.target.value)}
         />
 
-
-        {/*TODO: @Yanny and @Deep, please replace this with the custom Calendar Component, thanks!*/}
         <input
             type="date"
             value={date}
