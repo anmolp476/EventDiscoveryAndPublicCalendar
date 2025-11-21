@@ -100,18 +100,19 @@ function App() {
   return (
     <main style={{ padding: "24px" }}>
       <h1>Browse &amp; Filter Events</h1>
-
-      {/* Filters and search bar */}
+      
+      <hr className="title-divider" />
+      {/* Filters and Search Bar */}
       <FilterPanel {...filters} onChange={handleChange} />
 
-      {/* Search and validation messages */}
+      {/* Search and Validation Messages */}
       <SearchMessages
         query={debounced}
         shortQueryError={shortQueryError}
         filteredCount={filteredEvents.length}
       />
 
-      {/* Event list results */}
+      {/* Event List Results */}
       <EventList events={filteredEvents} />
     </main>
   )

@@ -13,6 +13,8 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -28,7 +30,8 @@ body {
   min-height: 100vh;
   display: flex;
   justify-content: center; 
-  align-items: center
+  align-items: center;
+  background: linear-gradient(to bottom, #f3f4f6, #d2d3d4);
 }
 
 h1 {
@@ -67,3 +70,6 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+
+
