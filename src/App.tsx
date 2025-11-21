@@ -5,6 +5,7 @@ import { useDebouncedValue } from "./hooks/useDebouncedValue"
 import FilterPanel from "./components/FilterPanel"
 import SearchMessages from "./components/SearchMessages"
 import EventList from "./components/EventList"
+import Calender from "./components/Calendar"
 
 function App() {
 
@@ -98,22 +99,29 @@ function App() {
   })
 
   return (
-    <main style={{ padding: "24px" }}>
-      <h1>Browse &amp; Filter Events</h1>
-      
-      <hr className="title-divider" />
-      {/* Filters and Search Bar */}
-      <FilterPanel {...filters} onChange={handleChange} />
+    <main id="mainContainer">
+      <div id="eventView">
+        <h1 style={{textAlign:'center'}}>Browse &amp; Filter Events</h1>
 
-      {/* Search and Validation Messages */}
-      <SearchMessages
-        query={debounced}
-        shortQueryError={shortQueryError}
-        filteredCount={filteredEvents.length}
-      />
+        {/* Filters and search bar */}
+        <FilterPanel {...filters} onChange={handleChange} />
 
-      {/* Event List Results */}
-      <EventList events={filteredEvents} />
+        {/* Search and validation messages */}
+        <SearchMessages
+          query={debounced}
+          shortQueryError={shortQueryError}
+          filteredCount={filteredEvents.length}
+        />
+
+        {/* Event list results */}
+        <EventList events={filteredEvents} />
+      </div>
+      <div id="calenderView"> 
+        <h1 style={{textAlign:'center'}}>Event Calendar</h1>
+        <Calender/>
+      </div>
+        
+        
     </main>
   )
 }
