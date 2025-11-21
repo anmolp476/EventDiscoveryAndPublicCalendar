@@ -2,10 +2,10 @@ export type Event = {
   id: number;
   title: string;
   description: string;
-  date: string; // YYYY-MM-DD
+  date?: string; // YYYY-MM-DD
   end?: string; //YYYY-MM-DD
   category: "academic" | "social" | "sports";
-  location: string;
+  location?: string;
   organization: string;
   cateringSelected?: boolean;
   additionalResources?: string;
@@ -100,64 +100,6 @@ export const events: Event[] = [
     bookedAt: 1764089475838,
     micNum: "2",
     projectorNum: "0",
-    status: "Approved",
-  },
-  {
-    id: 7,
-    title: "Debate Championship",
-    description: "Regional debate competition over 2 days.",
-    date: "2025-12-05",
-    end: "2025-12-06",
-    category: "academic",
-    location: "Auditorium",
-    organization: "Debate Club",
-    additionalResources: "Podium, Microphones",
-    bookedAt: 1764189475838,
-    micNum: "4",
-    projectorNum: "2",
-    status: "Approved",
-  },
-  {
-    id: 8,
-    title: "Spring Festival",
-    description: "Music, food stalls, and performances celebrating spring.",
-    date: "2026-03-20",
-    category: "social",
-    location: "Campus Grounds",
-    organization: "Cultural Society",
-    additionalResources: "Stage, Tents",
-    bookedAt: 1764289475838,
-    micNum: "2",
-    projectorNum: "1",
-    status: "Pending",
-  },
-  {
-    id: 9,
-    title: "Soccer Finals",
-    description: "Final match of the season with awards ceremony.",
-    date: "2026-04-10",
-    category: "sports",
-    location: "Main Stadium",
-    organization: "Sports Committee",
-    additionalResources: "Scoreboard, Concessions",
-    bookedAt: 1764389475838,
-    micNum: "1",
-    projectorNum: "0",
-    status: "Approved",
-  },
-  {
-    id: 10,
-    title: "Hackathon Weekend",
-    description: "24-hour coding competition with prizes.",
-    date: "2026-05-15",
-    end: "2026-05-16",
-    category: "academic",
-    location: "Tech Lab",
-    organization: "Computer Club",
-    additionalResources: "Power Strips, WiFi",
-    bookedAt: 1764489475838,
-    micNum: "0",
-    projectorNum: "3",
     status: "Approved",
   },
 ];
