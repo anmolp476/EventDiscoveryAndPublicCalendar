@@ -129,7 +129,9 @@ function App() {
         <EventList events={filteredEvents} />
       </div>
       <div id="calenderView"> 
-        <h1 style={{textAlign:'center'}}>Event Calendar</h1>
+        <h1 style={{textAlign:'center'}}>
+          Event Calendar
+        </h1>
         <Calender/>
       </div>
         
