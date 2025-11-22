@@ -2,27 +2,3 @@
 input,select{padding:.6rem .7rem;border:1px solid #d0d7de;border-radius:8px}
 input:focus,select:focus{outline:2px solid #4c8bf5;outline-offset:1px}
 ul{padding-left:1rem}
-
-
-.title-divider {                 
-  border: 0;                    
-  border-top: 1px solid grey;
-  margin: 8px 0 8px;         
-}
-
-.search-row input,
-.search-row select {
-  background-image: linear-gradient(to bottom, #ffffff, #e5e7eb); 
-  border: 1px solid black;                              
-  color: grey;                                
-}
-.search-row select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-}
-
-.search-row input::placeholder {
-  color: grey;            
-}
-

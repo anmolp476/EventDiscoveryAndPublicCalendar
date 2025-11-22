@@ -5,6 +5,7 @@ import { useDebouncedValue } from "./hooks/useDebouncedValue"
 import FilterPanel from "./components/FilterPanel"
 import SearchMessages from "./components/SearchMessages"
 import EventList from "./components/EventList"
+import Calender from "./components/Calendar"
 
 function App() {
 
@@ -22,7 +23,13 @@ function App() {
           const locations = values.map((event: any) => ({
             roomSelected: event.roomSelected,
             startDate: event.startDate.substring(0, 10), // Extract YYYY-MM-DD
+            endDate: event.endDate.substring(0, 10), // Extract YYYY-MM-DD
             cateringSelected: event.cateringSelected,
+            additonalResources: event.additionalResources,
+            projectorNum: event.projectorNum,
+            micNum: event.micNum,
+            bookedAt: event.bookedAt,
+            status: event.status,
           }));
 
           setFirebaseBookings(locations);
@@ -61,6 +68,12 @@ function App() {
       location: firebaseBooking?.roomSelected ?? event.location,
       cateringSelected: firebaseBooking?.cateringSelected ?? false,
       date: firebaseBooking?.startDate ?? event.date,
+      end: firebaseBooking?.endDate ?? event.end,
+      additionalResources: firebaseBooking?.additonalResources ?? event.additionalResources,
+      bookedAt: firebaseBooking?.bookedAt ?? event.bookedAt,
+      projectorNum: firebaseBooking?.projectorNum ?? event.projectorNum,
+      micNum: firebaseBooking?.micNum ?? event.micNum,
+      status: firebaseBooking?.status ?? event.status,
     };
   });
 
@@ -100,19 +113,18 @@ function App() {
   return (
     <main style={{ padding: "24px" }}>
       <h1>Browse &amp; Filter Events</h1>
-      
-      <hr className="title-divider" />
-      {/* Filters and Search Bar */}
+
+      {/* Filters and search bar */}
       <FilterPanel {...filters} onChange={handleChange} />
 
-      {/* Search and Validation Messages */}
+      {/* Search and validation messages */}
       <SearchMessages
         query={debounced}
         shortQueryError={shortQueryError}
         filteredCount={filteredEvents.length}
       />
 
-      {/* Event List Results */}
+      {/* Event list results */}
       <EventList events={filteredEvents} />
     </main>
   )
