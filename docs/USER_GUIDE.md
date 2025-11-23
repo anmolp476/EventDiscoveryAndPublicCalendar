@@ -49,6 +49,15 @@ This subproject (Event Discovery And Public Calendar) for CampusConnect helps us
 
 ---
 
+## 4. Running Tests
+1. Use the following command to ensure you have installed all the necessary dependencies
+```bash
+npm install -D vitest @testing-library/react @testing-library/jest-dom @testing-library/dom jsdom
+```
+2. Run the command, `npm test`, and the test cases will run. 
+
+---
+
 ## 4. Major Features
 - Event Discovery
     - Users are presented with a minimalist user interface that provides an easy to read, yet informative overview on the events happening on campus.
