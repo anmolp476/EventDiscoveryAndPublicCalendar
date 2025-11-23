@@ -15,9 +15,18 @@ function App() {
     async function fetchRoomLocations() {
       try {
           const response = await fetch("https://cps714-b56c0-default-rtdb.firebaseio.com/roomBookings.json")
+
+          // ! ERROR HANDLING
+          if(!response.ok){
+            throw new Error("Could not fetch the data from the database!")
+          }
         
           const data = await response.json()
-          if(!data) return;
+          
+          // ! ERROR HANDLING
+          if(!data || typeof data != "object"){
+            throw new Error("The data isn't in the expected format");
+          } 
 
           const values = Object.values(data);
           const locations = values.map((event: any) => ({
@@ -81,8 +90,8 @@ function App() {
   const filteredEvents = mergedEvents.filter((event: Event) => {
 
     // We're getting the title & description, and making a haystack to search within.
-    const title = event.title.toLowerCase() ?? ""
-    const description = event.description.toLowerCase() ?? ""
+    const title = event.title?.toLowerCase() ?? ""
+    const description = event.description?.toLowerCase() ?? ""
     const haystack = `${title} ${description}` // a string value combined with title & description
     const query = debounced.trim().toLowerCase() // here is the current search query thts also trimmed & lowercased
 
